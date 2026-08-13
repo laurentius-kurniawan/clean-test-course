@@ -3,7 +3,7 @@ name: Lesson 6
 on:
   push:
     branches:
-      - lesson-6-complete
+      - lesson-6
 jobs:
   function_test:
     runs-on: ubuntu-latest
@@ -16,7 +16,7 @@ jobs:
       - name: Run functional tests
         run: npm test -- --coverage --watchAll=false
   deploy:
-    needs: [function_test]
+    needs: function_test
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -29,7 +29,7 @@ jobs:
       - name: '**PLACEHOLDER** Deploy to Elastic Beanstalk'
         run: echo Placeholder for Deployment
   security_test:
-    needs: [deploy]
+    needs: deploy
     runs-on: ubuntu-latest
     steps:
       - name: Dynamic Application Security Scan
@@ -37,7 +37,7 @@ jobs:
         with:
           target: 'https://hangryhippo.quantic.host'
   acceptance_test:
-    needs: [deploy]
+    needs: deploy
     runs-on: ubuntu-latest
     container: cypress/included:10.3.0
     defaults:
