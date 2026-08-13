@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - lesson-5
+
 jobs:
   security_test:
     runs-on: ubuntu-latest
@@ -17,20 +18,17 @@ jobs:
         run: |
           sed -i 's/DEBUG = True/DEBUG = False/g' hangry_api/hangry_api/settings.py
       - name: Run PyCharm Security
-        uses: tonybaloney/pycharm-security@master
+        uses: tonybaloney/pycharm-security@1.25.1
         with:
           fail_on_warnings: 'yes'
+
   build_and_test:
     needs: security_test
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: backend
-    name: Execute the PyCharm Security Test
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run PyCharm Security Test
-        uses: tonybaloney/pycharm-Security@1.25.1
+    name: Build and Run Unit Tests
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python 3.10
@@ -45,6 +43,7 @@ jobs:
         run: |
           coverage run -m --source=./hangry_api pytest
           coverage report
+
   deploy:
     needs: [build_and_test]
     runs-on: ubuntu-latest
